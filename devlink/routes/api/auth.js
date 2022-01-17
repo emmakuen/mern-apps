@@ -26,12 +26,12 @@ router.get("/", auth, async (req, res) => {
 // @desc    Authenticate User & Get Token
 // @access  Public
 
-const validation = [
+const validators = [
   check("email", "Please include valid email").isEmail(),
   check("password", "Password is required.").exists(),
 ];
 
-router.post("/", validation, async (req, res) => {
+router.post("/", validators, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
