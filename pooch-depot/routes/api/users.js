@@ -1,7 +1,9 @@
 const express = require("express");
-const { check, validationResult } = require("express-validator");
 const validation = require("../../utils/validation");
-const validate = require("../../utils/validationHandler");
+const errorMessages = require("../../utils/errorMessages");
+const validateAndCreateUser = require("../../utils/validateAndCreateUser");
+
+const User = require("../../models/User");
 
 const router = express.Router();
 
@@ -11,18 +13,22 @@ const router = express.Router();
  * @desc Register User
  * @requires express
  * @access public
- * @param validator
- * @returns {object} 200 - object of users info
+ * @param {Array} validation
+ * @returns {Object} 200 - object of users info
  * @returns {Error} default - unexpected error.
  */
 
 router.post(
   "/",
   [validation.name, validation.email, validation.password],
-  (req, res) => {
-    validate(req, res);
-
-    res.send("user route");
+  async (req, res) => {
+    if (!validation.isRequestValid(req, res)) return;
+    try {
+      await validateAndCreateUser(req, res);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).send(errorMessages[500]);
+    }
   }
 );
 
