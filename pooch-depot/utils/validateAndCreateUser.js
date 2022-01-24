@@ -91,7 +91,7 @@ const generateToken = (userId, res) => {
       id: userId,
     },
   };
-  let token = "";
+
   // TODO: Change back to 3600 in production
   jwt.sign(
     payload,
