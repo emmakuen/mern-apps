@@ -101,7 +101,7 @@ const generateToken = (userId, res) => {
     },
     (err, token) => {
       if (err) throw err;
-      res.json({ token });
+      return res.json({ token });
     }
   );
 };

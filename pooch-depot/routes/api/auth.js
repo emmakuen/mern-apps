@@ -1,5 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../../middleware/auth");
+const User = require("../../models/User");
+const errorMessages = require("../../utils/errorMessages");
 
 /**
  * Auth route.
@@ -12,8 +15,15 @@ const router = express.Router();
  * @returns {Error} default - unexpected error.
  */
 
-router.get("/", (req, res) => {
-  return res.send("auth route");
+router.get("/", auth, async (req, res) => {
+  try {
+    // select user but exclude password
+    const user = await User.findById(req.user.id).select("-password");
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send(errorMessages[500]);
+  }
 });
 
 module.exports = router;
