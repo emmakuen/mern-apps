@@ -3,4 +3,5 @@ module.exports = Object.freeze({
   userExists: "User already exists",
   noToken: "No token, authorization denied",
   invalidToken: "Token is not valid",
+  invalidCredentials: "Invalid Credentials",
 });

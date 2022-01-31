@@ -1,9 +1,7 @@
 const express = require("express");
 const validation = require("../../utils/validation");
 const errorMessages = require("../../utils/errorMessages");
-const validateAndCreateUser = require("../../utils/validateAndCreateUser");
-
-const User = require("../../models/User");
+const userHelper = require("../../utils/userHelper");
 
 const router = express.Router();
 
@@ -24,7 +22,7 @@ router.post(
   async (req, res) => {
     if (!validation.isRequestValid(req, res)) return;
     try {
-      await validateAndCreateUser(req, res);
+      await userHelper.validateAndCreateUser(req, res);
     } catch (err) {
       console.error(err);
       return res.status(500).send(errorMessages[500]);

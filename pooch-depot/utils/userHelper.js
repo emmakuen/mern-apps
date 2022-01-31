@@ -14,7 +14,7 @@ const errorMessages = require("./errorMessages");
  * @returns {object} response with json web token
  */
 
-module.exports = async (req, res) => {
+const validateAndCreateUser = async (req, res) => {
   const { name, email, password } = req.body;
 
   if (await validation.userExists(email)) {
@@ -53,6 +53,35 @@ const encrypt = async (password) => {
   const salt = await bcrypt.genSalt(10);
   const encrypted = await bcrypt.hash(password, salt);
   return encrypted;
+};
+
+/**
+ * Validate Credentials.
+ * @desc Asynchronously check if inserted credentials are valid
+ * @param {string} password
+ * @param {string} email
+ * @param {object} res - http response object
+ * @returns {object} user
+ */
+
+const validateCredentials = async (email, password, res) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res
+      .status(400)
+      .json({ errors: [{ msg: errorMessages.invalidCredentials }] });
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    return res
+      .status(400)
+      .json({ errors: [{ msg: errorMessages.invalidCredentials }] });
+  }
+
+  return user;
 };
 
 /**
@@ -105,3 +134,9 @@ const generateToken = (userId, res) => {
     }
   );
 };
+
+module.exports = Object.freeze({
+  generateToken,
+  validateAndCreateUser,
+  validateCredentials,
+});

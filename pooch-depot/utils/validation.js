@@ -40,6 +40,7 @@ module.exports = Object.freeze({
   ).isLength({
     min: 6,
   }),
+  passwordExists: check("password", "Password is required").exists(),
   isRequestValid: isRequestValid,
   userExists,
 });
