@@ -4,4 +4,5 @@ module.exports = Object.freeze({
   noToken: "No token, authorization denied",
   invalidToken: "Token is not valid",
   invalidCredentials: "Invalid Credentials",
+  profileNotFound: "There is no profile for this user",
 });
