@@ -10,7 +10,6 @@ const userHelper = require("../../utils/userHelper");
  * Auth route.
  * @route GET api/auth
  * @desc Test Route
- * @requires express
  * @access public
  * @returns {object} user object
  */
@@ -29,11 +28,9 @@ router.get("/", auth, async (req, res) => {
 /**
  * @route POST api/auth
  * @desc Authenticate user & get token
- * @requires express
  * @access public
  * @param
- * @returns {object} 200 -
- * @returns {Error} default - unexpected error.
+ * @returns {object} jwt token
  */
 
 router.post(
