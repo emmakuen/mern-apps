@@ -1,4 +1,5 @@
 const Profile = require("../models/Profile");
+const Users = require("../models/User");
 const errorMessages = require("./errorMessages");
 
 /**
@@ -6,13 +7,13 @@ const errorMessages = require("./errorMessages");
  * @desc Fetch user profile using user id
  * @param {String} userId
  * @param {object} res - http response object
- * @returns {object} profile object
+ * @returns {object} profile object; if profile object doesn't exist, sends 400 error
  */
 const fetchProfile = async (userId, res) => {
-  const profile = await Profile.findOne({ user: req.user.id }).populate(
-    "user",
-    ["name", "avatar"]
-  );
+  const profile = await Profile.findOne({ user: userId }).populate("user", [
+    "name",
+    "avatar",
+  ]);
 
   if (!profile) {
     return res.status(400).json({ msg: errorMessages.profileNotFound });
@@ -97,8 +98,14 @@ const createOrUpdateProfile = async (profileFields, userId) => {
   return profile;
 };
 
+const fetchProfiles = async () => {
+  const profiles = await Profile.find().populate("user", ["name", "avatar"]);
+  return profiles;
+};
+
 module.exports = Object.freeze({
   fetchProfile,
+  fetchProfiles,
   buildProfileFields,
   createOrUpdateProfile,
 });

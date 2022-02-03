@@ -31,7 +31,7 @@ router.get("/me", auth, async (req, res) => {
  * @route POST api/profile
  * @desc Create or Update User Profile
  * @access private
- * @returns {object} 200 -
+ * @returns {object} http response with profile object
  */
 
 router.post(
@@ -53,4 +53,42 @@ router.post(
   }
 );
 
+/**
+ * Profile route.
+ * @route GET api/profile
+ * @desc Get all profiles
+ * @access public
+ * @returns {object} 200 -
+ */
+
+router.get("/", async (req, res) => {
+  try {
+    const profiles = await profileHelper.fetchProfiles();
+    return res.json(profiles);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(errorMessages[500]);
+  }
+});
+
+/**
+ * User Profile route.
+ * @route GET api/profile/user/:userId
+ * @desc Get profile by user id
+ * @access public
+ * @returns {object} 200 -
+ */
+
+router.get("/user/:userId", async (req, res) => {
+  try {
+    const profiles = await profileHelper.fetchProfile(req.params.userId, res);
+    return res.json(profiles);
+  } catch (err) {
+    console.error(err);
+    if (err.kind == "ObjectId") {
+      return res.status(400).json({ msg: errorMessages.profileNotFound });
+    }
+    res.status(500).send(errorMessages[500]);
+  }
+});
 module.exports = router;
