@@ -1,3 +1,4 @@
+const res = require("express/lib/response");
 const Profile = require("../models/Profile");
 const User = require("../models/User");
 const messages = require("./messages");
@@ -118,10 +119,38 @@ const deleteProfile = async (userId) => {
   await User.findOneAndRemove({ _id: userId });
 };
 
+/**
+ * Build Owner Object.
+ * @desc Build owner object using the data provided in the http request
+ * @param {object} req - http request object
+ * @returns {object} owner object
+ */
+const buildOwnerObject = (req) => {
+  const { name, title, from, to, current, description } = req.body;
+  const owner = { name, title, from, to, current, description };
+  return owner;
+};
+
+/**
+ * Add Owner.
+ * @desc Add owner to profile
+ * @param {object} ownerObject
+ * @param {String} userId
+ * @returns {object} profile object
+ */
+const addOwner = async (ownerObject, userId) => {
+  const profile = await Profile.findOne({ user: userId });
+  profile.owners.unshift(ownerObject);
+  await profile.save();
+  return profile;
+};
+
 module.exports = Object.freeze({
   fetchProfile,
   fetchProfiles,
   buildProfileFields,
+  buildOwnerObject,
+  addOwner,
   createOrUpdateProfile,
   deleteProfile,
 });

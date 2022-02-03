@@ -111,4 +111,31 @@ router.delete("/", auth, async (req, res) => {
   }
 });
 
+/**
+ * Owner route.
+ * @route PUT api/profile/owners
+ * @desc add owners info to profile
+ * @access private
+ * @returns {object}
+ */
+
+router.put(
+  "/owners",
+  [auth, [validation.name, validation.title, validation.fromDate]],
+  async (req, res) => {
+    if (!validation.isRequestValid(req, res)) return;
+    try {
+      const ownerObject = profileHelper.buildOwnerObject(req);
+      const updatedProfile = await profileHelper.addOwner(
+        ownerObject,
+        req.user.id
+      );
+      return res.json(updatedProfile);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send(messages[500]);
+    }
+  }
+);
+
 module.exports = router;

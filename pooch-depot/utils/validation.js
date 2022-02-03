@@ -20,7 +20,9 @@ const isRequestValid = (req, res) => {
 
 module.exports = Object.freeze({
   name: check("name", "Name is required").notEmpty(),
+  title: check("title", "Title is required").notEmpty(),
   email: check("email", "Please enter valid email").isEmail(),
+  fromDate: check("from", "From date is required").notEmpty(),
   password: check(
     "password",
     "Please enter a password with 6 or more characters"
