@@ -1,7 +1,8 @@
-const res = require("express/lib/response");
 const Profile = require("../models/Profile");
 const User = require("../models/User");
 const messages = require("./messages");
+const constants = require("../config/constants");
+const axios = require("axios").default;
 
 /**
  * Fetch Profile.
@@ -209,6 +210,31 @@ const removeVet = async (vetId, userId) => {
   return await Profile.findOne({ user: userId });
 };
 
+/**
+ * Fetch Instagram Feed.
+ * @desc Asynchronously fetch instagram feed for username
+ * @param {String} username
+ * @param {object} res http response object
+ * @returns {Array} array of instagram feed objects
+ */
+const fetchInstagramFeed = async (username, res) => {
+  const options = {
+    method: "GET",
+    url: constants.apiURI,
+    params: { username },
+    headers: {
+      "x-rapidapi-host": constants.apiHost,
+      "x-rapidapi-key": constants.apiKey,
+    },
+  };
+
+  const response = await axios.request(options);
+  if (response.status !== 200) {
+    return res.status(404).json({ msg: messages.notFound });
+  }
+  return response.data;
+};
+
 module.exports = Object.freeze({
   fetchProfile,
   fetchProfiles,
@@ -221,4 +247,5 @@ module.exports = Object.freeze({
   removeVet,
   createOrUpdateProfile,
   deleteProfile,
+  fetchInstagramFeed,
 });

@@ -207,4 +207,25 @@ router.delete("/vet/:id", auth, async (req, res) => {
   }
 });
 
+/**
+ * Instagram feed route.
+ * @route GET api/profile/github/:username
+ * @desc fetch last 12 post from Instagram
+ * @access public
+ * @returns {Array} response with feed array
+ */
+router.get("/instagram/:username", async (req, res) => {
+  try {
+    const instagramData = await profileHelper.fetchInstagramFeed(
+      req.params.username,
+      res
+    );
+
+    return res.json(instagramData);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send(messages[500]);
+  }
+});
+
 module.exports = router;
