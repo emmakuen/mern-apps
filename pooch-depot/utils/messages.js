@@ -6,5 +6,6 @@ module.exports = Object.freeze({
   invalidCredentials: "Invalid Credentials",
   profileNotFound: "Profile not found",
   profileDeleted: "Profile deleted",
+  notFound: "Not found",
   ownerExists: "Owner with such name already exists",
 });

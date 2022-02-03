@@ -153,11 +153,60 @@ const addOwner = async (ownerObject, userId) => {
  * @returns {object} updated profile object
  */
 const removeOwner = async (ownerId, userId) => {
+  await Profile.updateOne(
+    { user: userId },
+    {
+      $pull: {
+        owners: { _id: ownerId },
+      },
+    }
+  );
+  return await Profile.findOne({ user: userId });
+};
+
+/**
+ * Build Vet Object.
+ * @desc Build vet object using the data provided in the http request
+ * @param {object} req - http request object
+ * @returns {object} vet object
+ */
+const buildVetObject = (req) => {
+  const { hospital, name, from, to, current, description } = req.body;
+  const vet = { hospital, name, from, to, current, description };
+  return vet;
+};
+
+/**
+ * Add Vet.
+ * @desc Asynchronously add vet to profile
+ * @param {object} vetObject
+ * @param {String} userId
+ * @returns {object} profile object
+ */
+const addVet = async (vetObject, userId) => {
   const profile = await Profile.findOne({ user: userId });
-  const removeIndex = profile.owners.map((owner) => owner.id).indexOf(ownerId);
-  profile.owners.splice(removeIndex, 1);
+  profile.vets.unshift(vetObject);
   await profile.save();
   return profile;
+};
+
+/**
+ * Remove Vet.
+ * @desc Asynchronously remove vet with specified id from profile with given user id
+ * @param {String} vetId
+ * @param {String} userId
+ * @returns {object} updated profile object
+ */
+const removeVet = async (vetId, userId) => {
+  await Profile.updateOne(
+    { user: userId },
+    {
+      $pull: {
+        vets: { _id: vetId },
+      },
+    }
+  );
+  return await Profile.findOne({ user: userId });
 };
 
 module.exports = Object.freeze({
@@ -165,8 +214,11 @@ module.exports = Object.freeze({
   fetchProfiles,
   buildProfileFields,
   buildOwnerObject,
+  buildVetObject,
   addOwner,
+  addVet,
   removeOwner,
+  removeVet,
   createOrUpdateProfile,
   deleteProfile,
 });

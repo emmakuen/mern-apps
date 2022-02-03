@@ -23,6 +23,7 @@ module.exports = Object.freeze({
   title: check("title", "Title is required").notEmpty(),
   email: check("email", "Please enter valid email").isEmail(),
   fromDate: check("from", "From date is required").notEmpty(),
+  hospital: check("hospital", "Hospital name is required").notEmpty(),
   password: check(
     "password",
     "Please enter a password with 6 or more characters"

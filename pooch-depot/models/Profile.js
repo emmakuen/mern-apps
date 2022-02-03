@@ -53,7 +53,7 @@ const ProfileSchema = new mongoose.Schema({
   ],
   vets: [
     {
-      hospitalName: {
+      hospital: {
         type: String,
         required: true,
       },
