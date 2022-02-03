@@ -5,4 +5,5 @@ module.exports = Object.freeze({
   invalidToken: "Token is not valid",
   invalidCredentials: "Invalid Credentials",
   profileNotFound: "Profile not found",
+  profileDeleted: "Profile deleted",
 });

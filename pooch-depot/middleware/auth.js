@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const errorMessages = require("../utils/errorMessages");
+const messages = require("../utils/messages");
 const constants = require("../config/constants");
 
 module.exports = (req, res, next) => {
@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
   const token = req.header("x-auth-token");
 
   // Check if there's no token
-  if (!token) return res.status(401).json({ msg: errorMessages.noToken });
+  if (!token) return res.status(401).json({ msg: messages.noToken });
 
   // Verify token
   try {
@@ -15,6 +15,6 @@ module.exports = (req, res, next) => {
     req.user = decoded.user;
     next();
   } catch (err) {
-    res.status(401).json({ msg: errorMessages.invalidToken });
+    res.status(401).json({ msg: messages.invalidToken });
   }
 };

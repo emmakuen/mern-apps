@@ -1,6 +1,6 @@
 const express = require("express");
 const validation = require("../../utils/validation");
-const errorMessages = require("../../utils/errorMessages");
+const messages = require("../../utils/messages");
 const userHelper = require("../../utils/userHelper");
 
 const router = express.Router();
@@ -25,7 +25,7 @@ router.post(
       await userHelper.validateAndCreateUser(req, res);
     } catch (err) {
       console.error(err);
-      return res.status(500).send(errorMessages[500]);
+      return res.status(500).send(messages[500]);
     }
   }
 );

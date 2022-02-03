@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../../middleware/auth");
 const User = require("../../models/User");
-const errorMessages = require("../../utils/errorMessages");
+const messages = require("../../utils/messages");
 const validation = require("../../utils/validation");
 const userHelper = require("../../utils/userHelper");
 
@@ -21,7 +21,7 @@ router.get("/", auth, async (req, res) => {
     res.json(user);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send(errorMessages[500]);
+    res.status(500).send(messages[500]);
   }
 });
 
@@ -45,7 +45,7 @@ router.post(
       userHelper.generateToken(user.id, res);
     } catch (err) {
       console.error(err);
-      return res.status(500).send(errorMessages[500]);
+      return res.status(500).send(messages[500]);
     }
   }
 );

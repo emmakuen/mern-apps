@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const constants = require("../config/constants");
 const validation = require("./validation");
 const User = require("../models/User");
-const errorMessages = require("./errorMessages");
+const messages = require("./messages");
 
 /**
  * Validate and create user.
@@ -17,15 +17,25 @@ const errorMessages = require("./errorMessages");
 const validateAndCreateUser = async (req, res) => {
   const { name, email, password } = req.body;
 
-  if (await validation.userExists(email)) {
-    return res
-      .status(400)
-      .json({ errors: [{ msg: errorMessages.userExists }] });
+  if (await userExists(email)) {
+    return res.status(400).json({ errors: [{ msg: messages.userExists }] });
   }
   const avatar = fetchUserAvatar(email);
   const encryptedPassword = await encrypt(password);
   const userId = await createUser(name, email, avatar, encryptedPassword);
   generateToken(userId, res);
+};
+
+/**
+ * Existing User Handler.
+ * @desc Asynchronously check if user with given email exists
+ * @param {string} email
+ * @returns {Promise<Boolean>}
+ */
+
+const userExists = async (email) => {
+  const user = await User.findOne({ email });
+  return user ? true : false;
 };
 
 /**
@@ -70,7 +80,7 @@ const validateCredentials = async (email, password, res) => {
   if (!user) {
     return res
       .status(400)
-      .json({ errors: [{ msg: errorMessages.invalidCredentials }] });
+      .json({ errors: [{ msg: messages.invalidCredentials }] });
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
@@ -78,7 +88,7 @@ const validateCredentials = async (email, password, res) => {
   if (!isMatch) {
     return res
       .status(400)
-      .json({ errors: [{ msg: errorMessages.invalidCredentials }] });
+      .json({ errors: [{ msg: messages.invalidCredentials }] });
   }
 
   return user;

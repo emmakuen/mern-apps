@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../../middleware/auth");
-const errorMessages = require("../../utils/errorMessages");
+const messages = require("../../utils/messages");
 const validation = require("../../utils/validation");
 const profileHelper = require("../../utils/profileHelper");
 
@@ -22,12 +22,12 @@ router.get("/me", auth, async (req, res) => {
     return res.json(profile);
   } catch (err) {
     console.error(err.message);
-    return res.status(500).send(errorMessages[500]);
+    return res.status(500).send(messages[500]);
   }
 });
 
 /**
- * Profile route.
+ * Profiles route.
  * @route POST api/profile
  * @desc Create or Update User Profile
  * @access private
@@ -48,7 +48,7 @@ router.post(
       return res.json(profile);
     } catch (err) {
       console.error(err.message);
-      return res.status(500).send(errorMessages[500]);
+      return res.status(500).send(messages[500]);
     }
   }
 );
@@ -67,7 +67,7 @@ router.get("/", async (req, res) => {
     return res.json(profiles);
   } catch (err) {
     console.error(err);
-    res.status(500).send(errorMessages[500]);
+    res.status(500).send(messages[500]);
   }
 });
 
@@ -86,9 +86,29 @@ router.get("/user/:userId", async (req, res) => {
   } catch (err) {
     console.error(err);
     if (err.kind == "ObjectId") {
-      return res.status(400).json({ msg: errorMessages.profileNotFound });
+      return res.status(400).json({ msg: messages.profileNotFound });
     }
-    res.status(500).send(errorMessages[500]);
+    res.status(500).send(messages[500]);
   }
 });
+
+/**
+ * User Profile route.
+ * @route DELETE api/profile
+ * @desc delete profile
+ * @access private
+ * @returns {object} 200 -
+ */
+
+router.delete("/", auth, async (req, res) => {
+  try {
+    // TODO: remove users posts
+    await profileHelper.deleteProfile(req.user.id);
+    res.json({ msg: messages.profileDeleted });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send(messages[500]);
+  }
+});
+
 module.exports = router;

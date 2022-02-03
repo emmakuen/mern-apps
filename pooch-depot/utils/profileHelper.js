@@ -1,6 +1,6 @@
 const Profile = require("../models/Profile");
-const Users = require("../models/User");
-const errorMessages = require("./errorMessages");
+const User = require("../models/User");
+const messages = require("./messages");
 
 /**
  * Fetch Profile.
@@ -16,7 +16,7 @@ const fetchProfile = async (userId, res) => {
   ]);
 
   if (!profile) {
-    return res.status(400).json({ msg: errorMessages.profileNotFound });
+    return res.status(400).json({ msg: messages.profileNotFound });
   }
 
   return profile;
@@ -98,9 +98,24 @@ const createOrUpdateProfile = async (profileFields, userId) => {
   return profile;
 };
 
+/**
+ * Fetch Profiles.
+ * @desc Fetches all existing profiles
+ * @returns {Array} array of profiles
+ */
 const fetchProfiles = async () => {
   const profiles = await Profile.find().populate("user", ["name", "avatar"]);
   return profiles;
+};
+
+/**
+ * Delete Profile.
+ * @desc Delete profile with the given user id
+ * @param {String} userId
+ */
+const deleteProfile = async (userId) => {
+  await Profile.findOneAndRemove({ user: userId });
+  await User.findOneAndRemove({ _id: userId });
 };
 
 module.exports = Object.freeze({
@@ -108,4 +123,5 @@ module.exports = Object.freeze({
   fetchProfiles,
   buildProfileFields,
   createOrUpdateProfile,
+  deleteProfile,
 });

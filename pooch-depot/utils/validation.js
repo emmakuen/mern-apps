@@ -1,5 +1,4 @@
 const { check, validationResult } = require("express-validator");
-const User = require("../models/User");
 
 /**
  * Validation Handler.
@@ -19,18 +18,6 @@ const isRequestValid = (req, res) => {
   return true;
 };
 
-/**
- * Existing User Handler.
- * @desc Asynchronously check if user with given email exists
- * @param {string} email
- * @returns {Promise<Boolean>}
- */
-
-const userExists = async (email) => {
-  const user = await User.findOne({ email });
-  return user ? true : false;
-};
-
 module.exports = Object.freeze({
   name: check("name", "Name is required").notEmpty(),
   email: check("email", "Please enter valid email").isEmail(),
@@ -44,5 +31,4 @@ module.exports = Object.freeze({
   status: check("status", "Status is required").notEmpty(),
   skills: check("skills", "Skills are required").notEmpty(),
   isRequestValid: isRequestValid,
-  userExists,
 });
