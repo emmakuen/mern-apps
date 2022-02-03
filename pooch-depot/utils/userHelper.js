@@ -11,7 +11,7 @@ const errorMessages = require("./errorMessages");
  * @desc Send error status if user exists, else create user with encrypted password & avatar
  * @param {object} req - http request object
  * @param {object} res - http response object
- * @returns {object} response with json web token
+ * @returns {object} http response with json web token
  */
 
 const validateAndCreateUser = async (req, res) => {
@@ -111,7 +111,7 @@ const createUser = async (name, email, avatar, password) => {
  * @desc Generate json web token
  * @param {string} userId
  * @param {object} res - http response object
- * @returns {object} json web token
+ * @returns {object} http response with json web token
  */
 
 const generateToken = (userId, res) => {

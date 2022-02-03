@@ -25,9 +25,6 @@ const ProfileSchema = new mongoose.Schema({
   bio: {
     type: String,
   },
-  instagramid: {
-    type: String,
-  },
   owners: [
     {
       name: {
@@ -81,6 +78,9 @@ const ProfileSchema = new mongoose.Schema({
     },
   ],
   social: {
+    instagram: {
+      type: String,
+    },
     youtube: {
       type: String,
     },

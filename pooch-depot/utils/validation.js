@@ -41,6 +41,8 @@ module.exports = Object.freeze({
     min: 6,
   }),
   passwordExists: check("password", "Password is required").exists(),
+  status: check("status", "Status is required").notEmpty(),
+  skills: check("skills", "Skills are required").notEmpty(),
   isRequestValid: isRequestValid,
   userExists,
 });
