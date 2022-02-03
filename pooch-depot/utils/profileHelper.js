@@ -5,7 +5,7 @@ const messages = require("./messages");
 
 /**
  * Fetch Profile.
- * @desc Fetch user profile using user id
+ * @desc Asynchronously fetch user profile using user id
  * @param {String} userId
  * @param {object} res - http response object
  * @returns {object} profile object; if profile object doesn't exist, sends 400 error
@@ -75,7 +75,7 @@ const buildProfileFields = (req) => {
 
 /**
  * Create or Update Profile.
- * @desc Create or update profile on db using profile fields object
+ * @desc Asynchronously create or update profile on db using profile fields object
  * @param {object} profileFields
  * @param {String} userId
  * @returns {object} profile object
@@ -101,7 +101,7 @@ const createOrUpdateProfile = async (profileFields, userId) => {
 
 /**
  * Fetch Profiles.
- * @desc Fetches all existing profiles
+ * @desc Asynchronously fetches all existing profiles
  * @returns {Array} array of profiles
  */
 const fetchProfiles = async () => {
@@ -111,7 +111,7 @@ const fetchProfiles = async () => {
 
 /**
  * Delete Profile.
- * @desc Delete profile with the given user id
+ * @desc Asynchronously delete profile with the given user id
  * @param {String} userId
  */
 const deleteProfile = async (userId) => {
@@ -133,7 +133,7 @@ const buildOwnerObject = (req) => {
 
 /**
  * Add Owner.
- * @desc Add owner to profile
+ * @desc Asynchronously add owner to profile
  * @param {object} ownerObject
  * @param {String} userId
  * @returns {object} profile object
@@ -145,12 +145,28 @@ const addOwner = async (ownerObject, userId) => {
   return profile;
 };
 
+/**
+ * Remove Owner.
+ * @desc Asynchronously remove owner with specified id from profile with given user id
+ * @param {String} ownerId
+ * @param {String} userId
+ * @returns {object} updated profile object
+ */
+const removeOwner = async (ownerId, userId) => {
+  const profile = await Profile.findOne({ user: userId });
+  const removeIndex = profile.owners.map((owner) => owner.id).indexOf(ownerId);
+  profile.owners.splice(removeIndex, 1);
+  await profile.save();
+  return profile;
+};
+
 module.exports = Object.freeze({
   fetchProfile,
   fetchProfiles,
   buildProfileFields,
   buildOwnerObject,
   addOwner,
+  removeOwner,
   createOrUpdateProfile,
   deleteProfile,
 });

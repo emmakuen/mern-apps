@@ -113,14 +113,14 @@ router.delete("/", auth, async (req, res) => {
 
 /**
  * Owner route.
- * @route PUT api/profile/owners
+ * @route PUT api/profile/owner
  * @desc add owners info to profile
  * @access private
  * @returns {object}
  */
 
 router.put(
-  "/owners",
+  "/owner",
   [auth, [validation.name, validation.title, validation.fromDate]],
   async (req, res) => {
     if (!validation.isRequestValid(req, res)) return;
@@ -137,5 +137,26 @@ router.put(
     }
   }
 );
+
+/**
+ * Owner route.
+ * @route DELETE api/profile/owner/:id
+ * @desc delete owners info from profile
+ * @access private
+ * @returns {object}
+ */
+
+router.delete("/owner/:id", auth, async (req, res) => {
+  try {
+    const updatedProfile = await profileHelper.removeOwner(
+      req.params.id,
+      req.user.id
+    );
+    return res.json(updatedProfile);
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).send(messages[500]);
+  }
+});
 
 module.exports = router;
