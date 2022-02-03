@@ -39,10 +39,10 @@ router.post(
   [auth, [validation.status, validation.skills]],
   async (req, res) => {
     if (!validation.isRequestValid(req, res)) return;
-    const profileObject = profileHelper.buildProfileFields(req);
+    const profileFields = profileHelper.buildProfileFields(req);
     try {
       const profile = await profileHelper.createOrUpdateProfile(
-        profileObject,
+        profileFields,
         req.user.id
       );
       return res.json(profile);

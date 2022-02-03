@@ -22,11 +22,10 @@ const fetchProfile = async (userId, res) => {
 };
 
 /**
- * Fetch Profile.
- * @desc Build profile object using data in the http request
+ * Build Profile.
+ * @desc Build profileFields object using data in the http request
  * @param {object} req - http request object
- * @param {object} res - http response object
- * @returns {object} profile object
+ * @returns {object} profileFields object
  */
 const buildProfileFields = (req) => {
   const {
@@ -72,6 +71,13 @@ const buildProfileFields = (req) => {
   return profileFields;
 };
 
+/**
+ * Create or Update Profile.
+ * @desc Create or update profile on db using profile fields object
+ * @param {object} profileFields
+ * @param {String} userId
+ * @returns {object} profile object
+ */
 const createOrUpdateProfile = async (profileFields, userId) => {
   let profile = await Profile.findOne({ user: userId });
 
